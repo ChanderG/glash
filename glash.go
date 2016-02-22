@@ -9,8 +9,44 @@
  */
 package main
 
-import "fmt"
+import (
+  "fmt"
+  "bufio"
+  "os"
+  "strings"
+)
 
+/*
+ * Display prompt and obtain input. 
+ * INPUT
+ * pointer to a Buffered Reader meant to read from stdio
+ */
+func prompt(conreader *bufio.Reader) {
+  // display prompt
+  fmt.Print("$ ")
+
+  // obtain input
+  input, err := conreader.ReadString('\n')
+  if err != nil {
+	panic(err)
+  }
+
+  // remove trailing '\n'
+  input = strings.TrimRight(input, "\n")
+
+  // process command
+  fmt.Println(input)
+}
+
+/*
+ * Main runner.
+ */
 func main() {
-  fmt.Println("> WIP")
+  fmt.Println("> Welcome to glash.")
+
+  // reader to read from console
+  conreader := bufio.NewReader(os.Stdin)
+  for true {
+	prompt(conreader)
+  }
 }
