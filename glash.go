@@ -17,6 +17,22 @@ import (
 )
 
 /*
+ * Process commands.
+ * INPUT
+ * string representing user input
+ */
+func processCommand(command string) {
+  args := strings.Split(command, " ")
+  cmd := args[0]
+
+  // manual processing of in-built commands
+  if cmd == "x" {
+	// exit command
+	os.Exit(0)
+  }
+}
+
+/*
  * Display prompt and obtain input. 
  * INPUT
  * pointer to a Buffered Reader meant to read from stdio
@@ -35,7 +51,7 @@ func prompt(conreader *bufio.Reader) {
   input = strings.TrimRight(input, "\n")
 
   // process command
-  fmt.Println(input)
+  processCommand(input)
 }
 
 /*
