@@ -15,7 +15,6 @@ import (
   "os"
   "strings"
   "os/exec"
-  "syscall"
 )
 
 /*
@@ -26,20 +25,17 @@ import (
  * args -- full string on cli in array form
  */
 func outsourceCmd(name string, args []string){
-  // using manual exec flow
 
-  // find the binary
-  fullname, err := exec.LookPath(name)
+  cmd := exec.Command(name)
+  cmd.Args = args
+
+  cmd.Stdin = os.Stdin
+  cmd.Stdout = os.Stdout
+  cmd.Stderr = os.Stderr
+
+  err := cmd.Run()
   if err != nil {
-	fmt.Println("glash: ", name, " command not found")
-	os.Exit(0)
-  }
-
-  env := os.Environ()
-
-  err = syscall.Exec(fullname, args, env)
-  if err != nil {
-	panic(err)
+	fmt.Println(err)
   }
 }
 
