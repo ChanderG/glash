@@ -14,7 +14,34 @@ import (
   "bufio"
   "os"
   "strings"
+  "os/exec"
+  "syscall"
 )
+
+/*
+ * Run outsourced commands.
+ * In a seperate function to make it easy to change implementations.
+ * INPUT
+ * name -- name of command 
+ * args -- full string on cli in array form
+ */
+func outsourceCmd(name string, args []string){
+  // using manual exec flow
+
+  // find the binary
+  fullname, err := exec.LookPath(name)
+  if err != nil {
+	fmt.Println("glash: ", name, " command not found")
+	os.Exit(0)
+  }
+
+  env := os.Environ()
+
+  err = syscall.Exec(fullname, args, env)
+  if err != nil {
+	panic(err)
+  }
+}
 
 /*
  * Process commands.
@@ -23,13 +50,16 @@ import (
  */
 func processCommand(command string) {
   args := strings.Split(command, " ")
-  cmd := args[0]
+  name := args[0]
 
   // manual processing of in-built commands
-  if cmd == "x" {
+  if name == "x" {
 	// exit command
 	os.Exit(0)
   }
+
+  // outsource commands
+  outsourceCmd(name, args)
 }
 
 /*
