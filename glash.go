@@ -48,14 +48,15 @@ func processCommand(command string) {
   args := strings.Split(command, " ")
   name := args[0]
 
-  // manual processing of in-built commands
-  if name == "x" {
-	// exit command
-	os.Exit(0)
+  // process builtins follwed by outsourcing
+  switch name {
+  case "x":  // exit command
+	  os.Exit(0)
+  case "c":  // clear command
+	  outsourceCmd("clear", []string{"clear"})
+  default:   // outsource
+      outsourceCmd(name, args)
   }
-
-  // outsource commands
-  outsourceCmd(name, args)
 }
 
 /*
