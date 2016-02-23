@@ -18,6 +18,34 @@ import (
 )
 
 /*
+ * handler for command "cd"
+ * INPUT
+ * standard format of name and args
+ * KNOWN ISSUES
+ * Does not handle - ie : "cd -" fails
+ */
+func handleCd(name string, args []string){
+  dest := ""
+  if len(args) == 1 {
+	// in case, no extra args 
+	// simulate cd to home dir
+	var exists bool 
+    dest, exists = os.LookupEnv("HOME")
+	if !exists {
+	  fmt.Println("home dir not found")
+	  return
+	}
+  } else {
+	dest = args[1]
+  }
+
+  err := os.Chdir(dest)
+  if err != nil {
+	fmt.Println(err)
+  }
+}
+
+/*
  * Run outsourced commands.
  * In a seperate function to make it easy to change implementations.
  * INPUT
@@ -54,6 +82,8 @@ func processCommand(command string) {
 	  os.Exit(0)
   case "c":  // clear command
 	  outsourceCmd("clear", []string{"clear"})
+  case "cd": 
+	  handleCd(name, args)
   default:   // outsource
       outsourceCmd(name, args)
   }
