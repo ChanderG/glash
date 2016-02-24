@@ -13,3 +13,22 @@ Go Light-on-features tries-to-be-Anonymous SHell
 ### Motivation
 
 Use different campus computers, to `ssh` back to my own machine in the network. Need to keep my contact on those machines as discrete as possible. This is a step in that direction.
+
+### Compiling
+
+I use Docker in my workflow.
+Start a container:
+```
+docker run -it --rm -v `pwd`:/ws -w /ws golang
+```
+
+Build the image as :
+```
+GOOS=<osname> GOARCH=<arch> go build glash.go
+```
+
+Example:
+```
+GOOS=linux GOARCH=386 go build glash.go
+```
+builds for linux 32 bit.
