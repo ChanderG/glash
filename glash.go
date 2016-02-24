@@ -94,10 +94,11 @@ func processCommand(command string) {
  * Display prompt and obtain input. 
  * INPUT
  * pointer to a Buffered Reader meant to read from stdio
+ * string to use as prompt
  */
-func prompt(conreader *bufio.Reader) {
+func prompt(conreader *bufio.Reader, promptLine string) {
   // display prompt
-  fmt.Print("$ ")
+  fmt.Print(promptLine)
 
   // obtain input
   input, err := conreader.ReadString('\n')
@@ -139,16 +140,31 @@ func tearDownWorld() {
 }
 
 /*
+ * setup prompt of form: hostname$
+ */
+func setupPromptLine() string {
+  hostname, err := os.Hostname()
+  if err != nil {
+	fmt.Println(err)
+  }
+
+  line := strings.Join([]string{ "glash", "@", hostname, "$ " }, "")
+  return line
+}
+
+/*
  * Main runner.
  */
 func main() {
   // setup world
   setupWorld()
+  // setup prompt
+  promptLine := setupPromptLine()
   fmt.Println("> Welcome to glash.")
 
   // reader to read from console
   conreader := bufio.NewReader(os.Stdin)
   for true {
-	prompt(conreader)
+	prompt(conreader, promptLine)
   }
 }
