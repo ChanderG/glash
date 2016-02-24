@@ -79,6 +79,7 @@ func processCommand(command string) {
   // process builtins follwed by outsourcing
   switch name {
   case "x":  // exit command
+	  tearDownWorld()
 	  os.Exit(0)
   case "c":  // clear command
 	  outsourceCmd("clear", []string{"clear"})
@@ -111,10 +112,38 @@ func prompt(conreader *bufio.Reader) {
   processCommand(input)
 }
 
+func setupWorld() {
+  // create the required folder
+  fmt.Println("Setting up world.")
+
+  err := os.Mkdir("/tmp/glash", 0700)
+  if err!=nil {
+	fmt.Println(err)
+  }
+
+  err = os.Setenv("HOME", "/tmp/glash")
+  if err!=nil {
+	fmt.Println(err)
+  }
+}
+
+func tearDownWorld() {
+  // destroy the home folder
+  // not using env variable HOME to get folder name to avoid accidentally nuking something important
+  // using fixed constant name for now
+  err := os.RemoveAll("/tmp/glash")
+  if err!=nil {
+	fmt.Println(err)
+  }
+  fmt.Println("Tear down complete.")
+}
+
 /*
  * Main runner.
  */
 func main() {
+  // setup world
+  setupWorld()
   fmt.Println("> Welcome to glash.")
 
   // reader to read from console
