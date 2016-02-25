@@ -9,6 +9,7 @@ Go Light-on-features tries-to-be-Anonymous SHell
 3. No history stored anywhere.
 4. To be used on the go, not installed.
 5. Provides a scratch directory in `/tmp` which will be cleaned out upon e`x`it'ing the shell.
+6. Cleanup quickly using `Ctrl-\`.
 
 ### Motivation
 

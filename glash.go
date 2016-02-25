@@ -15,6 +15,8 @@ import (
   "os"
   "strings"
   "os/exec"
+  "os/signal"
+  "syscall"
 )
 
 /*
@@ -153,13 +155,39 @@ func setupPromptLine() string {
 }
 
 /*
+ * Handle different signals
+ */
+func handleSignals() {
+
+  // ignore SIGINT
+  signal.Ignore(syscall.SIGINT)
+
+  // use Ctrl-\ to exit
+  sigs := make(chan os.Signal, 1)
+  signal.Notify(sigs, syscall.SIGQUIT)
+  go func() {
+	<-sigs
+	// clean up and exit
+	fmt.Println("\n\nQuick exit initiated...")
+	tearDownWorld()
+	os.Exit(0)
+  } ()
+
+}
+
+/*
  * Main runner.
  */
 func main() {
   // setup world
   setupWorld()
+
   // setup prompt
   promptLine := setupPromptLine()
+
+  // handle signals
+  handleSignals()
+
   fmt.Println("> Welcome to glash.")
 
   // reader to read from console
